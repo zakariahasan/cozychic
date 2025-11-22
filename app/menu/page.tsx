@@ -14,7 +14,7 @@ export default async function MenuPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-[10px]">
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Menu</h1>
@@ -40,9 +40,9 @@ export default async function MenuPage() {
       {categories.map((category) => (
         <section key={category.id} className="space-y-5">
           <h2 className="text-lg font-semibold capitalize">{category.name}</h2>
-          {category.description && (
+          {/* {category.description && (
             <p className="text-xs text-slate-600">{category.description}</p>
-          )}
+          )} */}
           {category.items.length === 0 ? (
             <p className="text-xs text-slate-500">
               No items in this category yet.
