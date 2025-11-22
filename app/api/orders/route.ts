@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { clearScreenDown } from "readline";
 
 export async function GET() {
   const orders = await prisma.order.findMany({
@@ -12,6 +13,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
+
   const {
     type,
     name,
@@ -33,8 +35,11 @@ export async function POST(request: Request) {
       quantity: number;
       price: number;
       notes?: string;
+      addOns?: string;
     }[];
   } = body;
+
+  items.map(itm => console.log(itm))
 
   if (!type || !name || !phone || !items || items.length === 0) {
     return NextResponse.json(
@@ -62,6 +67,7 @@ export async function POST(request: Request) {
           quantity: i.quantity,
           price: i.price,
           notes: i.notes,
+          addOns: JSON.stringify(i.addOns)
         })),
       },
     },

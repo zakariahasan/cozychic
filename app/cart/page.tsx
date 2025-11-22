@@ -15,6 +15,8 @@ export default function CartPage() {
   const items = cart?.items || [];
   const total = cart?.total;
 
+  console.log(cart)
+
   async function handleCheckout(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -52,6 +54,7 @@ export default function CartPage() {
           quantity: i.quantity,
           price: i.price,
           notes: i.notes,
+          addOns: i.addOns
         })),
       }),
     });
@@ -68,7 +71,7 @@ export default function CartPage() {
     setOrderId(data.id);
     form.reset();
     clearCartStorage();
-    return toast.success('order submitted');
+    return toast.success('order submitted'.toUpperCase());
   }
 
   const removeHandler = (item: CartItemType) => {
@@ -81,9 +84,6 @@ export default function CartPage() {
       
     }
   }
-
-  console.log(cart)
-
 
   return (
     <>
@@ -110,12 +110,20 @@ export default function CartPage() {
                 className="flex items-start justify-between gap-2 text-sm border-b last:border-b-0 pb-3 last:pb-0"
               >
                 <div>
-                  <p className="font-medium">{item.name}</p>
+                  <p className="font-medium">{item.name.toUpperCase()}</p>
                   <p className="text-xs text-slate-500">
-                    Qty: {item.quantity} • Base: ${item.price ? item.price.toFixed(2) : 0}
+                    Qty: {item.quantity} * {item.size}
                   </p>
+                    {
+                      item.addOns['extraToppings'] ? <div className="my-5">
+                        <p className="text-xs">Extra topptings * $2.50</p>
+                        {
+                          item.addOns['extraToppings'].map((tps, idx) => <p key={idx} className="text-xs text-slate-500">{tps}</p>)
+                        }
+                      </div> : null
+                    }
                   <p className="text-xs text-slate-500">
-                    Line total: ${item.price.toFixed(2)}
+                    total: ${item.price.toFixed(2)}
                   </p>
                 </div>
                 <button
@@ -129,7 +137,7 @@ export default function CartPage() {
           </div>
 
           <form
-            // onSubmit={handleCheckout}
+            onSubmit={handleCheckout}
             className="bg-white border rounded-xl p-4 space-y-4 text-sm"
           >
             <h2 className="font-semibold">Checkout</h2>

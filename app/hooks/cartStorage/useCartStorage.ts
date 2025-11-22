@@ -8,7 +8,7 @@ const useCartStorage = () => {
     const [state, setState] = useState({});
 
     useEffect(() => {
-        if (window === undefined) return;
+        if (!window || !window.localStorage) return;
 
         const cart = localStorage.getItem('cart');
 
@@ -19,6 +19,8 @@ const useCartStorage = () => {
     }, [])
     
     const getCart = (): CartStorageType | undefined => {
+        if (!window || !window.localStorage) return;
+        
         const storage = localStorage.getItem('cart');
 
         if (!storage) return;
@@ -57,8 +59,9 @@ const useCartStorage = () => {
         
         try {
             const cart = getCart();
-            
+
             if (!cart) {
+                localStorage.removeItem('cart');
                 const dateTime = new Date().toLocaleString();
 
                 const cart: CartStorageType = {
@@ -75,36 +78,20 @@ const useCartStorage = () => {
                 }
 
                 cart.items.push(item);
-
                 setLocalStorage(cart);
+                setState(cart);
                 return true;
             }
             else {
-                const itemExist = isItemExist(item);
                 const updateTime = new Date().toLocaleString();
                 cart.updatedAt = updateTime;
-                console.log(itemExist)
+                
+                cart.items.push(item);
 
-                if (itemExist && itemExist >= 0){
-                    const cartItem = cart.items.at(itemExist) || {}
-
-                    cartItem['quantity'] += item.quantity;
-                    
-                    if (cart.total) {
-                        cart.total.itemCount += item.quantity;
-                        cart.total.subtotal += (item.price * item.quantity)
-                    }
-                    
-                }
-                else {
-                    cart.items.push(item);
-                    console.log(cart)
-                    
-                    if (cart.total) {
-                        cart.total.itemCount += item.quantity;
-                        cart.total.subtotal += (item.price * item.quantity);
-                        cart.total.uniqueItems += 1;
-                    }
+                if (cart.total) {
+                    cart.total.itemCount += item.quantity;
+                    cart.total.subtotal += item.price;
+                    cart.total.uniqueItems += 1;
                 }
 
                 setState(cart);

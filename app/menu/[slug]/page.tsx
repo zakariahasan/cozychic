@@ -8,18 +8,21 @@ type Props = {
 };
 
 export default async function ItemDetailPage({ params }: Props) {
-  const decodeUrl = decodeURI(params.slug);
+  const decodeUrl = decodeURIComponent(params.slug);
+  console.log(decodeUrl)
+
   const item = await prisma.item.findUnique({
     where: { slug: decodeUrl },
   });
+
 
   if (!item) {
     notFound();
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <div className="relative aspect-[4/3] bg-slate-200 rounded-xl flex items-center justify-center text-sm text-slate-500">
+    <div className="grid gap-20 md:grid-cols-2 my-[50px]">
+      <div className="relative aspect-[4/4] bg-white rounded-xl flex items-center justify-center text-sm text-slate-500">
         <Image src={item.imageUrl ? item.imageUrl : ''}
                alt={item.name}
                fill
@@ -28,7 +31,7 @@ export default async function ItemDetailPage({ params }: Props) {
 
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-semibold">{item.name}</h1>
+          <h1 className="text-2xl font-semibold">{item.name.toUpperCase()}</h1>
           {item.description && (
             <p className="text-slate-600 text-sm mt-1">
               {item.description}

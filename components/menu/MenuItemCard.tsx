@@ -12,7 +12,7 @@ export function MenuItemCard({ item }: Props) {
 
   return (
     <article className="bg-white border rounded-xl p-3 flex flex-col gap-2">
-      <Link href={`/menu/${item.slug}`} className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
+      <Link href={`/menu/${item.slug}`} className="aspect-video rounded-lg bg-white flex items-center justify-center text-xs text-slate-500">
         {item.imageUrl ? <Image src={item.imageUrl}
                                 alt={item.name}
                                 height={400}
